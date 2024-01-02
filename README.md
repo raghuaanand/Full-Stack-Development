@@ -1,2 +1,2 @@
 # Full-Stack-Development
-Open Source Full Stack Development by Harkirat Singh 
+Open Source Full Stack Development by Harkirat Singh.
