@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-
 const app = express();
-app.use(bodyParser.json());
 
+app.use(bodyParser.json());
 
 function findIndex(arr, id){
     for(let i = 0; i < arr.length; i++){
@@ -30,9 +29,6 @@ app.get('/todos', (req, res) => {
         res.json(JSON.parse(data));
     })
 });
-
-
-
 
 // posting todos into the backend
 
@@ -76,4 +72,10 @@ app.delete('/todos/:id', (req, res) => {
 
 });
 
-app.listen(3000);
+// for all other routes, send 400
+app.use((req, res, next) => {
+    res.status(400).send();
+});
+
+
+app.listen(3000)
