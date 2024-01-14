@@ -57,13 +57,23 @@ app.post('/todos', (req,res) => {
 // deleting the todos created
 
 app.delete('/todos/:id', (req, res) => {
-    const todoIndex = findIndex(todos, parseInt(req.params.id));
-    if(todoIndex === -1){
-        res.status(404).send();
-    }else{
-        todos = removeAtIndex(todos, todoIndex);
-        res.status(200).send();
-    }
+
+    fs.readFile('todo.json', 'utf-8', (err, data) => {
+        if(err) throw err;
+        var todos = JSON.parse(data);
+
+        const todoIndex = findIndex(todos, parseInt(req.params.id));
+        if(todoIndex === -1){
+            res.status(404).send();
+        }else{
+            todos = removeAtIndex(todos, todoIndex);
+            fs.writeFile('todo.json',JSON.stringify(todos), (err) => {
+                if(err) throw err;
+                res.status(200).send();
+            });
+        }
+    });
+
 });
 
 app.listen(3000);
