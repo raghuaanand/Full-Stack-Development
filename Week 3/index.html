@@ -6,8 +6,52 @@
     <title>TODO App</title>
 </head>
 <script>
+
+    function deleteDone(){
+        console.log("done deletion")
+        // delete the right todo from the listr
+        // you will need to give each todo an id, that must be enough the remove the todo
+
+    }
+
+    function deleteTodo(id){
+         fetch('http://localhost:3000/todos/' + id , {
+            method:'DELETE',
+            body: JSON.stringify({
+                title:title,
+                description:description
+            }),
+            headers: {
+                "Content-Type":"application/json"
+            }
+        }).then(deleteDone)
+    }
+
+    
     function todosCallback(data){
-        console.log(data)
+        // console.log(data)
+        var parentElement = document.getElementById('mainArea');
+        for(var i = 0; i < data.length; i++){
+            var childELement = document.createElement('div');
+
+            var grandChildElement1 = document.createElement('span');
+            grandChildElement1.innerHTML = data[i].title;
+
+            var grandChildElement2 = document.createElement('span');
+            grandChildElement2.innerHTML = data[i].description;
+
+            var grandChildElement3 = document.createElement('button');
+            grandChildElement3.innerHTML = 'DELETE'
+
+            grandChildElement3.setAttribute("onclick", "deleteTodo("+ data[i].id + ")")
+
+            childELement.appendChild(grandChildElement1);
+            childELement.appendChild(grandChildElement2);
+            childELement.appendChild(grandChildElement3);
+            
+            parentElement.appendChild(childELement);
+        }
+
     }
     function callback2(resp){
         resp.json().then(todosCallback);
@@ -29,7 +73,27 @@
 
         function parsedResponse(data){
             console.log(data);
-        }
+
+            var parentElement = document.getElementById('mainArea');
+            var childELement = document.createElement('div');
+
+            var grandChildElement1 = document.createElement('span');
+            grandChildElement1.innerHTML = data.title;
+
+            var grandChildElement2 = document.createElement('span');
+            grandChildElement2.innerHTML = data.description;
+
+            var grandChildElement3 = document.createElement('button');
+            grandChildElement3.innerHTML = 'DELETE'
+
+            childELement.appendChild(grandChildElement1);
+            childELement.appendChild(grandChildElement2);
+            childELement.appendChild(grandChildElement3);
+            
+            parentElement.appendChild(childELement);
+        
+    }
+
         function callback(resp){
             resp.json().then(parsedResponse);
         }
@@ -54,5 +118,8 @@
     <h2>Todo description</h2>
     <input type="text" id="description"/>
     <button onclick="onPress()">Send TODO</button>
+    <div id="mainArea">
+
+    </div>
 </body>
 </html>

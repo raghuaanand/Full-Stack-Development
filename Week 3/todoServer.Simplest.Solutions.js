@@ -9,6 +9,7 @@ const app = express();
 
 app.use(bodyParser.json());
 // app.use(cors());
+let todos = [];
 
 function findIndex(arr, id){
     for(let i = 0; i < arr.length; i++){
