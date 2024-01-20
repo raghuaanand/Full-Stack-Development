@@ -1,0 +1,6 @@
+Encryption --> we pass any string and it converts it into any random human inreadable string, looking at which we could never undrestand what was entered.
+            --> but it should return the same input when we put that random human unreadble string.
+            --> basically we hash the string to the very random strnig, which has no meaning around the world.
+
+            Boradly we pass a string and using super secret we get some random string. This is encryption.
+            Then in decryption, we pass the random string with the super secret to get the string that we had passed.
