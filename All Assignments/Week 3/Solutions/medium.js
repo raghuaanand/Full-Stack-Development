@@ -111,27 +111,29 @@ app.get('/admin/courses', authenticateJWT , (req, res) => {
 // USER SIGNUP
 
 app.post('/user/signup', (req, res) => {
-    const user = {...req.body, purchasedCourses: []}  // this is the spread syntax -> it essentially takes all properties of the req.body and adds them to new object, here purchasedCourse array is to store the courses that the user has purchased.
-
-    /* 
-        the above one line is equal to the below four lines of code. Google it.
-
-        const user = {
-            username: req.body.username,
-            password: req.body.password,
-            purchasedCourses: []
-        }
-    */
-
+    const user = {...req.body, purchasedCourses: []} 
+    const existingUser = USERS.find(u => u.username === username);
+    if(existingUser){
+        res.json({message:'User already exists'});
+    }else{
         USERS.push(user);
-        res.json({message:'signed up successfully'})
+        const token = generateJWT(user);
+        res.json({message:'Signed up successfully', token});
+    }
 });
 
 
 // USER LOGIN
 
-app.post('/user/login', authenticateJWT , (req, res) => {
-    res.json({message:'logged in successfully'});
+app.post('/user/login' , (req, res) => {
+    const {username, password} = req.body;
+    const user = USERS.find(u => u.username == username && u.password == password);
+    if(user){
+        const token = generateJWT(user);
+        res.json({message:'logged in successfully', token});
+    }else{
+        res.status(403).json({message:'User authentication failed'})
+    }
 }); 
 
 // GET COURSES OF THE USER
