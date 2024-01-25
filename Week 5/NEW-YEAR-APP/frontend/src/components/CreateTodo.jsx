@@ -1,8 +1,8 @@
 export function CreateTodo(){
-    return <div>
-        <input type="text" placeholder="title"></input>
-        <input type="text" placeholder="placeholder"></input>
+    return <div className="flex flex-col gap-5">
+        <input type="text" placeholder="title" className="border-gray-500 border-2 h-10 rounded-lg text-center"></input><br/>
+        <input type="text" placeholder="description" className="border-gray-500 border-2 h-10 rounded-lg text-center"></input><br/>
 
-        <button>Add a todo</button>
+        <button className="bg-blue-500 text-white h-10 rounded-lg">Add a todo</button>
     </div>
 }
