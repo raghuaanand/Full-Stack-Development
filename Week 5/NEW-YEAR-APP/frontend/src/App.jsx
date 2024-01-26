@@ -1,18 +1,24 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import { CreateTodo } from './components/CreateTodo'
 import Todos from './components/Todos'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState([]);
+
+  // wrong way of getting todos from the backend using setTodos
+  // correct way is using useEffect hook
+
+  fetch('http://localhost:3000/todos')
+    .then(async function(res) {
+      const json = await res.json();
+      setTodos(json.todos);
+    })
 
   return (
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center gap-40 items-center h-screen w-screen'>
       <CreateTodo />
-      <Todos />
-    </div>
+      <Todos todos = {todos}/>
+    </div> 
   )
 }
 
