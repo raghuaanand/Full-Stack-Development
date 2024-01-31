@@ -1,38 +1,32 @@
-import React, {Fragment, useState} from "react"
+import React, { memo, useState} from "react"
 
 function App() {
+
+  const [title, setTitle] = useState("Raghu");
+
+  function handleTitle(){
+    setTitle(Math.random());
+  }
   return (
-    <Fragment>
-    <HeaderWithButton />
+    <>
+      <button onClick={handleTitle}>Click to change the title </button>
+      <Header title={title}/>
       <Header  title="Anand"/>
-    </Fragment>
+      <Header  title="Anand"/>
+      <Header  title="Anand"/>
+    </>
   )
 }
 
-// now when we code like this whole components does not render, only the component with the useState hook renders.
-//  this makes the application slightly more optimal.
-
-function HeaderWithButton(){
-  const [title, setTitle] = useState("Raghu");
-
-  return(
-    <div>
-      <button onClick={() => {
-        setTitle(Math.random());
-      }}>Click to change the title </button>
-      <Header title={title}/>
-    </div>
-    )
-}
+//  memo lets you skip re-rendering the components when its props are unchanged, that is what we were doing by pushing the state down in previous commit.
 
 
-
-function Header({title}){
+const Header = React.memo(function Header({title}){
   return (
     <div>
       {title}
     </div>
   )
-}
+}) 
 
 export default App
