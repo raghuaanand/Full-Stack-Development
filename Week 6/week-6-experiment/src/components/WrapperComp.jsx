@@ -3,23 +3,26 @@ import React from 'react'
 const WrapperComp = () => {
   return (
     <div>
-      <CardComponent innerText = {<InnerComp/>}/>
+      {/* <CardComponent innerText = {<InnerComp/>}/> */}
+      <CardComponent>
+            hi there Raghu
+      </CardComponent>
     </div>
   )
 }
 
 
-function InnerComp(){
-    return(
-        <div>Hi there</div>
-    )
-}
+// function InnerComp(){
+//     return(
+//         <div>Hi there</div>
+//     )
+// }
 
 
-function CardComponent({innerText}){
+function CardComponent({children}){
     return(
         <div>
-            {innerText}
+            {children}
         </div>
     )
 }
