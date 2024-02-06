@@ -30,6 +30,7 @@ function App() {
     }]);
   }
 // keys while rendering helps react to know which was our first, second and so no element....
+// whenever we are rendering the list or array, we need to give it a key property.
   return (
     <>
       <button onClick={addTodo}>Add a todo</button>
