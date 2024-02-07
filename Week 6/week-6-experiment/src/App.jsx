@@ -1,30 +1,38 @@
-import { useState } from "react"
-import { memo } from 'react';
+import { useEffect, useState } from "react"
 
 function App() {
-  const [firstTitle, setFirstTitle] = useState("my name is harkirat");
+  const [todos, setTodos] = useState([]);
 
-  function changeTitle() {
-    setFirstTitle("My name is " + Math.random())
-  }
+  useEffect(() => {
+
+    setInterval(() => {
+
+      fetch("https://sum-server.100xdevs.com/todos")
+        .then(async (res) => {
+          const json = await res.json();
+          setTodos(json.todos);
+        })
+    }, 10000)
+    
+  }, [])
 
   return (
     <div>
-      <button onClick={changeTitle}>Click me to change the title</button>
-      <Header title={firstTitle} />
-      <br />
-      <Header title="My name is raman" />
-      <Header title="My name is raman" />
-      <Header title="My name is raman" />
-      <Header title="My name is raman" />
+      {todos.map(({title, description}) => <Todo title={title} description={description} />)}
     </div>
   )
 }
 
-const Header = memo(function ({title}) {
+function Todo({title, description}) {
   return <div>
-    {title}
+    <h2>
+      {title}
+    </h2>
+    <h5>
+      {description}
+    </h5>
   </div>
-})
+}
 
-export default App
+
+export default App;
