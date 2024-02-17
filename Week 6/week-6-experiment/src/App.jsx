@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 function App() {
   const [todos, setTodos] = useState([]);
 
+
+
+  //  puts some condition when backend will be hit using fetch, empty dependency array means it will hit backend at the start only.
   useEffect(() => {
 
     setInterval(() => {
@@ -15,6 +18,8 @@ function App() {
     }, 10000)
     
   }, [])
+
+  //  dependecy array takes state variable as input and any time that state variable changes, this code re runs.
 
   return (
     <div>
