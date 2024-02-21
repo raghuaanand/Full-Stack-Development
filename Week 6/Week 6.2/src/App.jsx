@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+// ---------------------------------- START----------------------------------------//
+
+
+/* import { useEffect, useState } from "react";
 import axios from 'axios';
 
 //  axios is another library that lets you hit http calls under the hood.
@@ -9,6 +12,8 @@ function App() {
 
 
   // it runs twice because we are using react strict mode in app.jsx , if we remove that strict mode it will run only once.
+
+  // we can not use async before the main function, to achieve that we have 2 ways -> the ugly way is to declare the function outside with async and then use it in the useEffect -> and the other way is to use the asyncUseEffect library
   
   useEffect(() => {
     axios.get("https://sum-server.100xdevs.com/todos")
@@ -34,4 +39,62 @@ function Todo({title, description}){
   )
 }
 
-export default App
+export default App */
+
+
+// ---------------------------------------------- ASSIGNMENT SOLUTION-------------------------------------------------------//
+
+import { useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+
+function App(){
+
+  const [selectedId, setSelectedId] = useState(1);
+  return(
+    <div>
+      <button onClick={function(){
+        setSelectedId(1);
+      }}>1</button>
+      <button onClick={function(){
+        setSelectedId(2);
+      }}>2</button>
+      <button onClick={function(){
+        setSelectedId(3);
+      }}>3</button>
+      <button onClick={function(){
+        setSelectedId(4);
+      }}>4</button>
+      <TODO id={selectedId} />
+    </div>
+  )
+}
+
+function TODO({id}){
+
+  const [todo, setTodo] = useState({});
+
+  // implement effect here
+
+  useEffect(() => {
+    axios.get(`https://sum-server.100xdevs.com/todo?id=${id}`)
+      .then(response => {
+        setTodo(response.data.todo)
+      })
+  }, [id])
+
+  return(
+    <div>
+    ID:{id}
+      <h1>
+        {todo.title}
+      </h1>
+      <h5>
+        {todo.description}
+      </h5>
+    </div>
+  )
+}
+
+
+export default App;
