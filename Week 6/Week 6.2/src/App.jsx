@@ -1,6 +1,6 @@
 // ---------------------------------- START----------------------------------------//
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 
 /* import { useEffect, useState } from "react";
@@ -111,11 +111,16 @@ function App() {
   const [inputValue, setInputValue] = useState(1);
 
 
+  // if just count state changes renders happens, then this expensive below for loop runs which should not have run because the value is same in previous re rendering as inputValue has not changed-> here we use useMemo
 
-  let sum = 0;
-  for(let i = 0; i < inputValue; i++){
+  let sum = useMemo(() => {
+    let sum = 0;
+    for(let i = 0; i < inputValue; i++){
     sum += i;
   }
+    return sum;
+  }, [inputValue])
+  
 
   return (
     <div>
