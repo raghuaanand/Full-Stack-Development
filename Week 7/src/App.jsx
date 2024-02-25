@@ -1,7 +1,13 @@
-import React from "react"
+import React, { Suspense } from "react"
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
-import Dashboard from "./components/Dashboard";
-import Landing from "./components/Landing"
+// import Dashboard from "./components/Dashboard";
+const Dashboard = React.lazy(() => import('./components/Dashboard'));
+
+// import Landing from "./components/Landing"
+
+
+//  lazy is used to lazily load the js files rather than loading it all at once in client side routing
+const Landing = React.lazy(() => import('./components/Landing'));
 
 
 function App() {
@@ -30,11 +36,13 @@ function App() {
         }}>Dashboard</button>
 
       </div> */}
+
+      {/* SUSPENSE API is used -> it tells that if component which has to be rendered has not arrived yet then render the fallback. */}
       <BrowserRouter>
         <Appbar />
         <Routes>
-          <Route path="/Dashboard" element={<Dashboard />} />
-          <Route path="/" element={<Landing />} />
+          <Route path="/Dashboard" element={<Suspense fallback={'LOADING...'}><Dashboard /></Suspense> } />
+          <Route path="/" element={<Suspense fallback={'loading...'}><Landing /></Suspense>} />
         </Routes>
       </BrowserRouter>
     </div>
