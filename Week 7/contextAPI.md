@@ -1,0 +1,1 @@
+ - If you are using the context api you are moving your  state mamagement out of your core react components.
