@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
       <RecoilRoot>
-        <Count />
+        <Count />  // anythings that uses count needs to be wrapped inside the RecoilRoot, We can do this directly in count component.
       </RecoilRoot>
     </div>
   )
@@ -15,7 +15,7 @@ function App() {
 
 function Count() {
   console.log("re-render");
-  return <div>
+  return <div>   
     <CountRenderer />
     <Buttons />
   </div>
