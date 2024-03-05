@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 
-mongoose.connect('mongodb://localhost:27017/paytm');
+// mongoose.connect('mongodb+srv://raghucuchd:u2r4L6NT206L3riE@cluster0.pqlbxv3.mongodb.net/paytm');
+
+mongoose.connect('mongodb+srv://raghucuchd:u2r4L6NT206L3riE@cluster0.pqlbxv3.mongodb.net/paytm')
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
+
 
 // const userSchema = mongoose.Schema({
 //     username: String,
@@ -66,5 +71,5 @@ const Accounts = mongoose.model("Accounts", accountSchema);
 
 module.exports = {
     User,
-    Accounts,
+    Accounts
 }

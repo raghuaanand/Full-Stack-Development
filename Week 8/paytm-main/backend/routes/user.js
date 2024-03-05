@@ -1,54 +1,51 @@
 const express = require('express');
 const { userSignup, userSignin, updateBody } = require('../types');
-const User = require('../db');
 const { JWT_SECRECT } = require('../config');
-
+const { User } = require('../db');
 const router = express.Router();
 
 
 //   router to sign up
 
-router.post('/signup', async (res, req) => {
-    const success = userSignup.safeParse(req.body);
-    if(!success){
-        return res.status(411).json({
-            message: 'Incorrect inputs'
-        });
-    }
+console.log('User routes loaded');
 
+// router.post('/signup', async (req, res) => {
+//     console.log('Signup route hit!'); 
+    
+//     const success = userSignup.safeParse(req.body);
+//     if(!success){
+//         res.status(411).json({
+//             message:'Invalid inputs'
+//         })
+//     }
+
+//     console.log('success done')
+//     // const existingUser = await User.findOne({
+//     //     username: req.body.username
+//     // })
+//     // if(existingUser){
+//     //     res.status(411).json({ message: 'User already exists' }); 
+//     // }
+    
+// });
+
+
+
+router.post('/signup', async (res, req) => {
     const existingUser = await User.findOne({
         username: req.body.username
     })
-
     if(existingUser){
-        return res.status(411).json({
-            message: 'Email already exits'
-        })
+        res.status(411).json({ message: 'User already exists' }); 
     }
-
-    const user = await User.create({
-        username: req.body.username,
-        password: req.body.username,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
-    })
-
-    const userId = user._id;
-
-    await Accounts.create({
-        userId,
-        balance: 1 + Math.random() * 10000
-    })
-
-    const token = jwt.sign({
-        userId
-    }, JWT_SECRECT)
-
-    res.json({
-        message:'User created successfully',
-        token: token
-    })
+    
 });
+
+// router.post('/signup', async (req, res) => {
+//     console.log('Signup route hit!'); 
+//     res.status(200).json({ message: 'Signup route hit!' }); 
+// });
+
 
 
 // router to sign in
@@ -95,7 +92,7 @@ router.put('/user', async (res, req) => {
         })
     }
 
-        await User.update({_id: req.userId}, req.body);
+        await User.findByIdAndUpdate({_id: req.userId}, req.body);
     res.json({
         message: 'Updated successfully'
     })
@@ -110,6 +107,7 @@ router.get('/user/bulk', async (res, req) => {
     const users = await User.find({
         $or: [{
             firstName: {
+                // TODO -> know about this
                 "$regex": filter
             }
         }, {
