@@ -9,7 +9,7 @@ app.use(cors());
 
 app.use(express.json())
 
-app.use('/api/vi', mainRouter);  // middleware is mounted to specified path in this case mainROuter is mounted to /api/vi  -> than means any request coming from starting with /api/vi will be handled by mainROuter
+app.use('/api/v1', mainRouter);  // middleware is mounted to specified path in this case mainROuter is mounted to /api/vi  -> than means any request coming from starting with /api/vi will be handled by mainROuter
 
 app.listen(3000);
 
