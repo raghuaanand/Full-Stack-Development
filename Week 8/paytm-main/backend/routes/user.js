@@ -8,47 +8,69 @@ const router = express.Router();
 
 //   router to sign up
 
-router.post('/signup', async (res, req) => {
-    const success = userSignup.safeParse(req.body);
-    if(!success){
-        return res.status(411).json({
-            message: 'Incorrect inputs'
-        });
-    }
+router.post('/signup', async (req, res) => {
 
-    const existingUser = await User.findOne({
-        username: req.body.username
-    })
+    const createPayLoad = req.body;
+    const parsedPayLoad = userSignup.safeParse(createPayLoad);
 
-    if(existingUser){
-        return res.status(411).json({
-            message: 'Email already exits'
+    if(!parsedPayLoad){
+        res.status(411).json({
+            message: 'wrong inputs'
         })
     }
+    // const user = await User.create({
+    //     username: req.body.username,
+    //     password: req.body.password,
+    //     firstName: req.body.firstName,
+    //     lastName: req.body.lastName
+    // })
 
-    const user = await User.create({
-        username: req.body.username,
-        password: req.body.username,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
-    })
+    // res.status(200).json({
+    //     message: 'user created successfully'
+    // })
+})
 
-    const userId = user._id;
+// router.post('/signup', async (res, req) => {
+//     const success = userSignup.safeParse(req.body);
+//     if(!success){
+//         return res.status(411).json({
+//             message: 'Incorrect inputs'
+//         });
+//     }
 
-    await Accounts.create({
-        userId,
-        balance: 1 + Math.random() * 10000
-    })
+//     const existingUser = await User.findOne({
+//         username: req.body.username
+//     })
 
-    const token = jwt.sign({
-        userId
-    }, JWT_SECRECT)
+//     if(existingUser){
+//         return res.status(411).json({
+//             message: 'Email already exits'
+//         })
+//     }
 
-    res.json({
-        message:'User created successfully',
-        token: token
-    })
-});
+//     const user = await User.create({
+//         username: req.body.username,
+//         password: req.body.username,
+//         firstName: req.body.firstName,
+//         lastName: req.body.lastName
+//     })
+
+//     const userId = user._id;
+
+//     await Accounts.create({
+//         userId,
+//         balance: 1 + Math.random() * 10000
+//     })
+
+//     const token = jwt.sign({
+//         userId
+//     }, JWT_SECRECT)
+
+//     res.json({
+//         message:'User created successfully',
+//         token: token
+//     })
+// });
 
 
 // router to sign in
