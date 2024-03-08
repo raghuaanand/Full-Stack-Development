@@ -8,27 +8,62 @@ const router = express.Router();
 
 //   router to sign up
 
-router.post('/signup', async (req, res) => {
+router.post("/signup", async (req, res) => {
+    try {
+        console.log("Signup route hit!");
+        const { username, password, firstName, lastName } = req.body; // Extract properties from req.body
 
-    const createPayLoad = req.body;
-    const parsedPayLoad = userSignup.safeParse(createPayLoad);
+        // Validate request body
+        const signupResponse = userSignup.safeParse({
+            username,
+            password,
+            firstName,
+            lastName,
+        });
 
-    if(!parsedPayLoad){
-        res.status(411).json({
-            message: 'wrong inputs'
-        })
+        // Validations
+        if (!signupResponse.success) {
+            console.log(signupResponse);
+            console.log("Wrong format");
+            return res.status(400).send({
+                success: false,
+                message: "Wrong format",
+            });
+        }
+
+        // Check for existing user
+        const existingUser = await User.findOne({ username }); // Find user by username
+
+        // Existing user
+        if (existingUser) {
+            return res.status(200).send({
+                success: false,
+                message: "Already registered. Please login.",
+            });
+        }
+
+        // Create new user
+        const user = await new User({
+            username,
+            password,
+            firstName,
+            lastName,
+        }).save();
+
+        res.status(201).send({
+            success: true,
+            message: "User registered successfully",
+            user,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: "Error in registration",
+            error: error.message,
+        });
     }
-    // const user = await User.create({
-    //     username: req.body.username,
-    //     password: req.body.password,
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName
-    // })
-
-    // res.status(200).json({
-    //     message: 'user created successfully'
-    // })
-})
+});
 
 // router.post('/signup', async (res, req) => {
 //     const success = userSignup.safeParse(req.body);
@@ -37,6 +72,8 @@ router.post('/signup', async (req, res) => {
 //             message: 'Incorrect inputs'
 //         });
 //     }
+
+//     console.log('done');
 
 //     const existingUser = await User.findOne({
 //         username: req.body.username
@@ -78,9 +115,9 @@ router.post('/signup', async (req, res) => {
 router.post('/signin', async (res, req) => {
     const success = userSignin.safeParse(req.body);
 
-    if(!success){
+    if (!success) {
         return res.status(411).json({
-            message:'Invalid inputs'
+            message: 'Invalid inputs'
         })
     }
 
@@ -89,20 +126,20 @@ router.post('/signin', async (res, req) => {
         password: req.body.password
     });
 
-    if(user){
+    if (user) {
         const token = jwt.sign({
             userId: user._id,
 
         }, JWT_SECRECT)
 
         res.json({
-            token:token
+            token: token
         })
         return;
     }
 
     res.status(411).json({
-        message:'Error while loging in'
+        message: 'Error while loging in'
     })
 });
 
@@ -111,17 +148,17 @@ router.post('/signin', async (res, req) => {
 router.put('/user', async (res, req) => {
     const success = updateBody.safeParse(req.body);
 
-    if(!success){
+    if (!success) {
         return res.status(411).json({
             message: 'Invalid inputs'
         })
     }
 
-        await User.update({_id: req.userId}, req.body);
+    await User.update({ _id: req.userId }, req.body);
     res.json({
         message: 'Updated successfully'
     })
-    
+
 });
 
 // to search friends
@@ -142,10 +179,10 @@ router.get('/user/bulk', async (res, req) => {
     })
 
     res.json({
-        user: users.map( user => ({
-            username : user.username,
+        user: users.map(user => ({
+            username: user.username,
             firstName: user.firstName,
-            lastName : user.lastName,
+            lastName: user.lastName,
             _id: user._id
         }))
     })
