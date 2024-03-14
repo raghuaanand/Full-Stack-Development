@@ -1,61 +1,93 @@
 const express = require('express');
 const { userSignup, userSignin, updateBody } = require('../types');
-const { JWT_SECRECT } = require('../config');
-const { User } = require('../db');
+const { User, Accounts } = require('../db');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const { authmiddleware } = require('../middleware');
+const { JWT_SECRET } = require('../config');
 
 
 //   router to sign up
 
 console.log('User routes loaded');
 
-// router.post('/signup', async (req, res) => {
-//     console.log('Signup route hit!'); 
-    
-//     const success = userSignup.safeParse(req.body);
-//     if(!success){
-//         res.status(411).json({
-//             message:'Invalid inputs'
-//         })
-//     }
+router.post("/signup", async (req, res) => {
+    try {
+        const { username, password, firstName, lastName } = req.body; // Extract properties from req.body
 
-//     console.log('success done')
-//     // const existingUser = await User.findOne({
-//     //     username: req.body.username
-//     // })
-//     // if(existingUser){
-//     //     res.status(411).json({ message: 'User already exists' }); 
-//     // }
-    
-// });
+        // Validate request body
+        const signupResponse = userSignup.safeParse({
+            username,
+            password,
+            firstName,
+            lastName,
+        });
 
+        // Validations
+        if (!signupResponse.success) {
+            console.log(signupResponse);
+            return res.status(400).send({
+                success: false,
+                message: "Invalid Credentials",
+            });
+        }
 
+        // Check for existing user
+        const existingUser = await User.findOne({ username }); // Find user by username
 
-router.post('/signup', async (res, req) => {
-    const existingUser = await User.findOne({
-        username: req.body.username
-    })
-    if(existingUser){
-        res.status(411).json({ message: 'User already exists' }); 
+        // Existing user
+        if (existingUser) {
+            return res.status(200).send({
+                success: false,
+                message: "Already registered. Please login.",
+            });
+        }
+
+        // Create new user
+        const user = await new User({
+            username,
+            password,
+            firstName,
+            lastName,
+        }).save();
+
+        const userId = user._id;
+
+        await Accounts.create({
+            userId,
+            balance: 1 + Math.random() * 100000
+        })
+
+        const token = jwt.sign({
+            userId
+        }, JWT_SECRET);
+
+        
+        res.status(201).send({
+            success: true,
+            message: "User registered successfully",
+            token : token,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: "Error in registration",
+            error: error.message,
+        });
     }
-    
 });
-
-// router.post('/signup', async (req, res) => {
-//     console.log('Signup route hit!'); 
-//     res.status(200).json({ message: 'Signup route hit!' }); 
-// });
 
 
 
 // router to sign in
 
-router.post('/signin', async (res, req) => {
+router.post('/signin', async (req, res) => {
     const success = userSignin.safeParse(req.body);
 
-    if(!success){
+    if (!success) {
         return res.status(411).json({
-            message:'Invalid inputs'
+            message: 'Invalid inputs'
         })
     }
 
@@ -64,39 +96,39 @@ router.post('/signin', async (res, req) => {
         password: req.body.password
     });
 
-    if(user){
+    if (user) {
         const token = jwt.sign({
             userId: user._id,
 
         }, JWT_SECRECT)
 
         res.json({
-            token:token
+            token: token
         })
         return;
     }
 
     res.status(411).json({
-        message:'Error while loging in'
+        message: 'Error while loging in'
     })
 });
 
 // update user
 
-router.put('/user', async (res, req) => {
+router.put('/user', authmiddleware,  async (res, req) => {
     const success = updateBody.safeParse(req.body);
 
-    if(!success){
+    if (!success) {
         return res.status(411).json({
             message: 'Invalid inputs'
         })
     }
 
-        await User.findByIdAndUpdate({_id: req.userId}, req.body);
+    await User.findByIdAndUpdate({ _id: req.userId }, req.body);
     res.json({
         message: 'Updated successfully'
     })
-    
+
 });
 
 // to search friends
@@ -118,10 +150,10 @@ router.get('/user/bulk', async (res, req) => {
     })
 
     res.json({
-        user: users.map( user => ({
-            username : user.username,
+        user: users.map(user => ({
+            username: user.username,
             firstName: user.firstName,
-            lastName : user.lastName,
+            lastName: user.lastName,
             _id: user._id
         }))
     })
