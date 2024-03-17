@@ -100,7 +100,7 @@ router.post('/signin', async (req, res) => {
         const token = jwt.sign({
             userId: user._id,
 
-        }, JWT_SECRECT)
+        }, JWT_SECRET)
 
         res.json({
             token: token
@@ -133,13 +133,12 @@ router.put('/user', authmiddleware,  async (res, req) => {
 
 // to search friends
 
-router.get('/user/bulk', async (res, req) => {
-    const filter = req.query.filter || ' ';
+router.get("/bulk", async (req, res) => {
+    const filter = req.query.filter || "";
 
     const users = await User.find({
         $or: [{
             firstName: {
-                // TODO -> know about this
                 "$regex": filter
             }
         }, {
@@ -157,6 +156,5 @@ router.get('/user/bulk', async (res, req) => {
             _id: user._id
         }))
     })
-});
-
+})
 module.exports = router;
