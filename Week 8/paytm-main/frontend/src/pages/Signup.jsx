@@ -45,7 +45,7 @@ const Signup = () => {
                   
 
                   localStorage.setItem("token", response.data.token)
-                  navigate('/signin')
+                  navigate('/dashboard')
                 }} label={"Sign Up"} />
             </div>
 
