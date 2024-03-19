@@ -113,6 +113,8 @@ router.post('/signin', async (req, res) => {
     })
 });
 
+
+
 // update user
 
 router.put('/user', authmiddleware,  async (res, req) => {
@@ -130,6 +132,8 @@ router.put('/user', authmiddleware,  async (res, req) => {
     })
 
 });
+
+
 
 // to search friends
 
