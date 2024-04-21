@@ -50,14 +50,20 @@ const client = new Client({
 
 //  this above code block  worked even when it was inside the insertData fucntion
 
-
+ 
 // Async function to insert data into a table
-async function insertData() {
+async function insertData(username:string, email:string, password:string) {
 
   try {
     await client.connect(); // Ensure client connection is established
-    const insertQuery = "INSERT INTO users (username, email, password) VALUES ('username3', 'user4@example.com', 'user_password');";
-    const res = await client.query(insertQuery);
+    // const insertQuery = "INSERT INTO users (username, email, password) VALUES ('username4', 'user5@example.com', 'user_password');";  // we do not pass values provided by the user into database as it is we will do SQL Injection for that.
+
+    //  what is SQL Injection -> example of putting a query in the input box and thus sending it as the query and changin the databases.
+
+    //  by passing tbe 
+    const insertQuery = "INSERT INTO users(username, email, password) VALUES ($1, $2, $3);"
+    const values = [username, email, password];
+    const res = await client.query(insertQuery, values);
     console.log('Insertion success:', res); // Output insertion result
   } catch (err) {
     console.error('Error during the insertion:', err);
@@ -66,4 +72,4 @@ async function insertData() {
   }
 }
 
-insertData();
+insertData('username5', 'userx@gmail.com', 'password@111').catch(console.error);
