@@ -1,0 +1,26 @@
+Relationships let you store data in different table and relate it with each other.
+
+**RELATIONSHIPS IN SQL
+-> since sql can not store objects as such, we need to define two different tablesto store this data in.
+
+    - FOREGIN KEY
+
+
+CREATE TABLE users(
+    is SERIAL PRIMARY NUMBER,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+);
+
+CREATE TABLE addresses(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    pincode VARCHAR(255),
+    created_at TIMESTAMP WITH THE ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREGIN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
