@@ -1,9 +1,18 @@
 import axios from "axios";
 
-async function getUserDetails(){
-  const response = await axios.get("https://week-13-offline.kirattechnologies.workers.dev/api/v1/user/details")
-  return response.data;
+
+
+async function getUserDetails() {
+  try {
+    const response = await axios.get("http://localhost:3000/api/user")
+	  return response.data;
+  }  catch(e) {
+    console.log(e);
+  }
 }
+
+
+//  the above way is not the best way to fetch the data but we will get to it in future.
 
 
 //  async component -> it was not in react and not in nextjs for the long time but now supports but only in server components and not in client components
