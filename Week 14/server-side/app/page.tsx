@@ -18,7 +18,7 @@ async function getUserDetails() {
 //  async component -> it was not in react and not in nextjs for the long time but now supports but only in server components and not in client components
 export default async function Home() {
 
-  await new Promise((r) => setTimeout(r, 5000));   // artificial delay 
+  // await new Promise((r) => setTimeout(r, 5000));   // artificial delay 
 
   const UserDetails = await getUserDetails();
   return (
