@@ -1,18 +1,37 @@
-import axios from "axios";
+import { PrismaClient } from "@prisma/client";
+
+const client = new PrismaClient();
+
+
+
+// async function getUserDetails() {
+//   try {
+//     const response = await axios.get("http://localhost:3000/api/user")
+//       return response.data;
+//   }  catch(e) {
+//     console.log(e);
+//   }
+// }
+
+//  ----> the above way is not the best way to fetch the data but we will get to it in future.
+//  ---------> the one below is the better way to fetch data
 
 
 
 async function getUserDetails() {
   try {
-    const response = await axios.get("http://localhost:3000/api/user")
-	  return response.data;
+    const user =await client.user.findFirst({});
+    return {
+      name : user?.username,
+      password: user?.password
+
+    }
   }  catch(e) {
     console.log(e);
   }
 }
 
 
-//  the above way is not the best way to fetch the data but we will get to it in future.
 
 
 //  async component -> it was not in react and not in nextjs for the long time but now supports but only in server components and not in client components
@@ -30,7 +49,7 @@ export default async function Home() {
                     Name: {UserDetails?.name}
                 </div>
                 
-                {UserDetails?.email}
+                Password: {UserDetails?.password}
             </div>
         </div>
     </div>

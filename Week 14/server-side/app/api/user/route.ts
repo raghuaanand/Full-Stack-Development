@@ -3,12 +3,10 @@ import { PrismaClient } from "@prisma/client";
 
 const client = new PrismaClient()
 
-export function GET(){
+export async function GET(){
     //database login
-    return Response.json({
-        email: "raghuaanand@gmail.com",
-        name: "Raghu Anand"
-    })
+    const user =await client.user.findFirst({});
+    return Response.json({name: user?.username, email: user?.password})
 }
 
 export async function POST(req : NextRequest){
