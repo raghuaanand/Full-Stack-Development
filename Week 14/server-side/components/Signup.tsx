@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEventHandler, useState } from "react";
 
 export function Signup() {
-    const [username, setUsername] = useState("");
+    const [email, setEmail ]= useState("");
     const [password, setPassword] = useState("");
 
     const router = useRouter();  // used to navigate the pages on actions like onclick and others
@@ -20,7 +20,7 @@ export function Signup() {
                     </div>
                     <div className="pt-2">
                         <LabelledInput onChange={(e) => {
-                            setUsername(e.target.value);
+                            setEmail(e.target.value);
                         }} label="Username" placeholder="raghuaanand@gmail.com" />
                         <LabelledInput onChange={(e) => {
                             setPassword(e.target.value)
@@ -28,7 +28,7 @@ export function Signup() {
 
                         <button type="button" onClick={async () => {
                             await axios.post("http://localhost:3000/api/user", {
-                                username,
+                                email,
                                 password
                             });
                             router.push('/')
